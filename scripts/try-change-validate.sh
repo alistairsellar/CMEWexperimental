@@ -39,4 +39,4 @@ echo "Running unit tests with pytest..."
 
 echo "Unit tests passed. Running CMEW workflow..."
 cd CMEW
-cylc vip -O metoffice -O test
+cylc vip -n CMEWexperimental -O metoffice -O test
