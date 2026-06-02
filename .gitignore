@@ -135,6 +135,3 @@ dmypy.json
 
 # PyCharm directory
 .idea/
-
-# Developer config file
-CMEW/opt/rose-suite-dev.conf
