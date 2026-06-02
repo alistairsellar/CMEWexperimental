@@ -19,7 +19,7 @@ u-cw673:
   experiment_id: amip
   grid: gn
   institute: MOHC
-  is_reference: 'false'
+  is_reference: 'true'
   label_for_plots: Test Label
   model_id: HadGEM3-GC5E-LL
   project: ESMVal

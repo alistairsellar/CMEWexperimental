@@ -13,6 +13,7 @@ datasets:
   grid: gn
   institute: MOHC
   project: ESMVal
+  reference_for_metric: true
   start_year: 1993
 - activity: ESMVal
   alias: Test Label
