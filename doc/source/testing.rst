@@ -13,16 +13,16 @@ Unit tests which are run inside the ``unittest`` task run ``pytest`` over
 existing python scripts in the workflow.
 
 For a local try-change-validate loop, run unit tests with ``pytest`` before
-submitting the full workflow:
+submitting a cut-down development workflow:
 
 1. ``module load scitools/community/esmvaltool/2.13.0``
 2. ``pytest CMEW/app/unittest/tests``
-3. ``cylc vip -n CMEWexperimental -O metoffice -O test``
+3. ``cylc vip -O dev -n CMEWexperimental``
 
 You can run both steps in order with:
     ``./scripts/try-change-validate.sh``
 
-To run the full |CMEW| workflow at the Met Office, with all tests enabled, use the command
+When a PR is ready for completion checks, run the full |CMEW| workflow at the Met Office with all tests enabled:
     ``cylc vip -O metoffice -O test``
 
 To only run the unit tests at the Met Office, use the command
