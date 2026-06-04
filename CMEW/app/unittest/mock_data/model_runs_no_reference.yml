@@ -5,7 +5,7 @@ u-bv526:
   experiment_id: historical
   grid: gn
   institute: MOHC
-  is_reference: 'true'
+  is_reference: 'false'
   label_for_plots: Ref Test Label
   model_id: HadGEM3-GC31-LL
   project: ESMVal

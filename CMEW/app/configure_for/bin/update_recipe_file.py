@@ -11,6 +11,35 @@ import os
 import yaml
 
 
+def is_reference_dataset(dataset_dict):
+    """Return whether the provided dataset is marked as reference."""
+    is_reference = dataset_dict.get("is_reference", "false")
+    return str(is_reference).strip().lower() == "true"
+
+
+def get_reference_dataset_key(extra_datasets):
+    """Return the key of the single dataset marked as reference.
+
+    Raises
+    ------
+    ValueError
+        If there is not exactly one dataset marked as reference.
+    """
+    reference_datasets = [
+        dataset_key
+        for dataset_key, dataset_dict in extra_datasets.items()
+        if is_reference_dataset(dataset_dict)
+    ]
+
+    if len(reference_datasets) != 1:
+        raise ValueError(
+            "Exactly one model run must be marked with is_reference=true. "
+            f"Found {len(reference_datasets)}."
+        )
+
+    return reference_datasets[0]
+
+
 def return_blank_recipe(recipe_path):
     """Empty the datasets section of an ESMValTool recipe.
 
@@ -51,6 +80,13 @@ def add_extra_datasets(recipe, yaml_filepath):
     with open(yaml_filepath, "r") as file_handle:
         extra_datasets = yaml.safe_load(file_handle)
 
+    reference_dataset_key = None
+    is_model_runs_data = all(
+        "suite_id" in dataset_dict for dataset_dict in extra_datasets.values()
+    )
+    if is_model_runs_data:
+        reference_dataset_key = get_reference_dataset_key(extra_datasets)
+
     # ESMValTool recipes expect keys to be "dataset", "ensemble", "exp" etc.
     variables_conversion = {
         "label_for_plots": "alias",
@@ -60,10 +96,12 @@ def add_extra_datasets(recipe, yaml_filepath):
     }
 
     # Some attributes are neither needed nor wanted by ESMValTool
-    unwanted_keys = ["calendar", "suite_id"]
+    unwanted_keys = ["calendar", "is_reference", "suite_id"]
 
     # Convert the variable names in the extra datasets
     for dataset, inner_dict in extra_datasets.items():
+        if dataset == reference_dataset_key:
+            inner_dict["reference_for_metric"] = True
         for key in unwanted_keys:
             if key in inner_dict:
                 del inner_dict[key]
