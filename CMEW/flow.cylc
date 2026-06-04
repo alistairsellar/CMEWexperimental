@@ -7,6 +7,10 @@
 
 {% from "scrape_ini" import list_datasets %}
 {% set datasets = list_datasets("rose-suite.conf") %}
+{% set mip_table_dir = MIP_TABLE_DIR %}
+{% if MIP_TABLE_VERSION %}
+    {% set mip_table_dir = "~cdds/etc/mip_tables/GCModelDev/" ~ MIP_TABLE_VERSION %}
+{% endif %}
 
 [scheduler]
     UTC mode = True
@@ -101,7 +105,7 @@
             DRS_NATIVE6 = {{ DRS_NATIVE6 }}
             DRS_OBS4MIPS = {{ DRS_OBS4MIPS }}
             MAX_PARALLEL_TASKS = {{ MAX_PARALLEL_TASKS }}
-            MIP_TABLE_DIR = {{ MIP_TABLE_DIR }}
+            MIP_TABLE_DIR = {{ mip_table_dir }}
             ROOTPATH_CMIP3 = {{ ROOTPATH_CMIP3 }}
             ROOTPATH_CMIP5 = {{ ROOTPATH_CMIP5 }}
             ROOTPATH_CMIP6 = {{ ROOTPATH_CMIP6 }}
@@ -124,7 +128,7 @@
             ROSE_TASK_APP = configure_standardise
             START_YEAR = {{ START_YEAR }}
             NUMBER_OF_YEARS = {{ NUMBER_OF_YEARS }}
-            MIP_TABLE_DIR = {{ MIP_TABLE_DIR }}
+            MIP_TABLE_DIR = {{ mip_table_dir }}
 
     [[standardise_model_data<dataset>]]
         inherit = STANDARDISE, DATASET
