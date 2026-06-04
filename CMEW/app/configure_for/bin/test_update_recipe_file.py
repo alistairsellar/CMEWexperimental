@@ -90,6 +90,28 @@ def path_to_cmip6_datasets_yaml():
     return path
 
 
+@pytest.fixture
+def path_to_model_runs_no_reference_yaml():
+    path = (
+        Path(__file__).parent.parent.parent
+        / "unittest"
+        / "mock_data"
+        / "model_runs_no_reference.yml"
+    )
+    return path
+
+
+@pytest.fixture
+def path_to_model_runs_two_references_yaml():
+    path = (
+        Path(__file__).parent.parent.parent
+        / "unittest"
+        / "mock_data"
+        / "model_runs_two_references.yml"
+    )
+    return path
+
+
 def test_return_blank_recipe(
     path_to_blank_recipe_kgo, path_to_mock_original_recipe
 ):
@@ -113,6 +135,28 @@ def test_add_extra_datasets(
     # Using str(filepath) here as update_recipe_file.py uses os, not pathlib
     actual = add_extra_datasets(pre_recipe, str(path_to_cmip6_datasets_yaml))
     assert actual == expected
+
+
+def test_add_extra_datasets_raises_for_missing_reference(
+    path_to_updated_recipe_kgo,
+    path_to_model_runs_no_reference_yaml,
+):
+    with open(path_to_updated_recipe_kgo, "r") as file_handle:
+        pre_recipe = yaml.safe_load(file_handle)
+
+    with pytest.raises(ValueError, match="Exactly one model run"):
+        add_extra_datasets(pre_recipe, str(path_to_model_runs_no_reference_yaml))
+
+
+def test_add_extra_datasets_raises_for_multiple_references(
+    path_to_updated_recipe_kgo,
+    path_to_model_runs_two_references_yaml,
+):
+    with open(path_to_updated_recipe_kgo, "r") as file_handle:
+        pre_recipe = yaml.safe_load(file_handle)
+
+    with pytest.raises(ValueError, match="Exactly one model run"):
+        add_extra_datasets(pre_recipe, str(path_to_model_runs_two_references_yaml))
 
 
 def test_main(
